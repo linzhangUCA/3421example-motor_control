@@ -29,36 +29,31 @@ if __name__ == "__main__":
     from time import sleep
 
     # SETUP
-    md = MotorDriver(9, 11, 10)  # right motor
-    # md = MotorDriver(15, 13, 14)  # left motor
+    # md = MotorDriver(9, 11, 10)  # right motor
+    md = MotorDriver(15, 13, 14)  # left motor
     STBY = Pin(12, Pin.OUT)
     STBY.off()
 
     # LOOP
     STBY.on()  # enable motor driver
     # Forwardly ramp up and down
-    # Speed ramp up, use 4 seconds
     for i in range(100):
         md.forward((i + 1) / 100)
-        print(f"duty cycle: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
-    # Speed ramp down, 4 seconds
+        print(f"f, dc: {i}%")
+        sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         md.forward((i + 1) / 100)
-        print(f"duty cycle: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
-
+        print(f"f, dc: {i}%")
+        sleep(4 / 100)  # 4 seconds to ramp down
     # Backwardly ramp up and down
-    # Speed ramp up, use 4 seconds
     for i in range(100):
         md.backward((i + 1) / 100)
-        print(f"duty cycle: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
-    # Speed ramp down, 4 seconds
+        print(f"b, dc: {i}%")
+        sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         md.backward((i + 1) / 100)
-        print(f"duty cycle: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        print(f"b, dc: {i}%")
+        sleep(4 / 100)  # 4 seconds to ramp down
 
     # Terminate
     md.stop()

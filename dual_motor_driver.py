@@ -6,7 +6,7 @@ class DualMotorDriver:
         self.right_motor = MotorDriver(*right_ids)  # unzip right_pins then feed to MotorDriver
         self.left_motor = MotorDriver(*left_ids)  # unzip left_pins then feed to MotorDriver
         self.stby_pin = Pin(stby_id, Pin.OUT)
-        self.stby_pin.on()  # enable motor driver
+        self.enable()  # enable motor driver
 
     def enable(self):
         self.stby_pin.on()
@@ -50,38 +50,38 @@ if __name__=="__main__":
     for i in range(100):
         dmd.linear_forward((i + 1) / 100)
         print(f"f, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         dmd.linear_forward((i + 1) / 100)
         print(f"f, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  # 4 seconds to ramp down
     # Backward ramp up and down
     for i in range(100):
         dmd.linear_backward((i + 1) / 100)
         print(f"b, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  #  4 seconds to ramp up
     for i in reversed(range(100)):
         dmd.linear_backward((i + 1) / 100)
         print(f"b, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  #  4 seconds to ramp down
     # Left ramp up and down
     for i in range(100):
         dmd.angular_left((i + 1) / 100)
         print(f"l, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  #  4 seconds to ramp up
     for i in reversed(range(100)):
         dmd.angular_left((i + 1) / 100)
         print(f"l, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  #  4 seconds to ramp down
     # Right ramp up and down
     for i in range(100):
         dmd.angular_right((i + 1) / 100)
         print(f"r, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  #  4 seconds to ramp up
     for i in reversed(range(100)):
         dmd.angular_right((i + 1) / 100)
         print(f"r, dc: {i}%")
-        sleep(4 / 100)  # use 4 seconds to ramp up
+        sleep(4 / 100)  #  4 seconds to ramp down
 
     # Terminate
     dmd.stop()
