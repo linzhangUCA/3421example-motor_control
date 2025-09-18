@@ -43,7 +43,7 @@ class DualMotorDriver:
 if __name__=="__main__":
     from time import sleep
     # SETUP
-    dmd = DualMotorDriver(right_ids=(15, 13, 14), left_ids=(9, 11, 10), stby_id=12)
+    dmd = DualMotorDriver(right_ids=(9, 11, 10), left_ids=(15, 13, 14), stby_id=12)
     
     # LOOP
     # Forward ramp up and down
