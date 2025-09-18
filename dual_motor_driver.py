@@ -28,12 +28,12 @@ class DualMotorDriver:
         self.right_motor.backward(speed)
         self.left_motor.backward(speed)
 
-    def angular_left(self, speed=0.):
+    def spin_left(self, speed=0.):
         assert 0<=speed<=1
         self.right_motor.forward(speed)
         self.left_motor.backward(speed)
 
-    def angular_right(self, speed=0.):
+    def spin_right(self, speed=0.):
         assert 0<=speed<=1
         self.right_motor.backward(speed)
         self.left_motor.forward(speed)
@@ -66,20 +66,20 @@ if __name__=="__main__":
         sleep(4 / 100)  #  4 seconds to ramp down
     # Left ramp up and down
     for i in range(100):
-        dmd.angular_left((i + 1) / 100)
+        dmd.spin_left((i + 1) / 100)
         print(f"l, dc: {i}%")
         sleep(4 / 100)  #  4 seconds to ramp up
     for i in reversed(range(100)):
-        dmd.angular_left((i + 1) / 100)
+        dmd.spin_left((i + 1) / 100)
         print(f"l, dc: {i}%")
         sleep(4 / 100)  #  4 seconds to ramp down
     # Right ramp up and down
     for i in range(100):
-        dmd.angular_right((i + 1) / 100)
+        dmd.spin_right((i + 1) / 100)
         print(f"r, dc: {i}%")
         sleep(4 / 100)  #  4 seconds to ramp up
     for i in reversed(range(100)):
-        dmd.angular_right((i + 1) / 100)
+        dmd.spin_right((i + 1) / 100)
         print(f"r, dc: {i}%")
         sleep(4 / 100)  #  4 seconds to ramp down
 
