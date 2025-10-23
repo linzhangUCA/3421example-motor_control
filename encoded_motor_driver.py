@@ -1,10 +1,12 @@
 from motor_driver import MotorDriver
-from machine import Pin
+from machine import Pin, Timer
+from math import pi
 
 
 class EncodedMotorDriver(MotorDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(*driver_ids)
+        # Pin configuration
         self.enc_a_pin = Pin(encoder_ids[0], Pin.IN)
         self.enc_b_pin = Pin(encoder_ids[1], Pin.IN)
         self.enc_a_pin.irq(
@@ -13,10 +15,24 @@ class EncodedMotorDriver(MotorDriver):
         self.enc_b_pin.irq(
             trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self._update_counts_b
         )
-        # variables
+        # Variables
         self._enc_a_val = self.enc_a_pin.value()
         self._enc_b_val = self.enc_b_pin.value()
         self.encoder_counts = 0
+        self.prev_counts = 0
+        self.wheel_ang_vel = 0.0
+        self.wheel_lin_vel = 0.0
+        # Constants
+        self.wheel_radius = 0.025  # m
+        self.gear_ratio = 98.5  #
+        self.encoder_cpr = 28  # pulse counts per revolution
+        self.timer_freq = 100
+        # Timer configuration
+        self.vel_meas_timer = Timer(
+            freq=self.timer_freq,
+            mode=Timer.PERIODIC,
+            callback=self.measure_velocity,
+        )
 
     def _update_counts_a(self, pin):
         self._enc_a_val = pin.value()
@@ -47,6 +63,15 @@ class EncodedMotorDriver(MotorDriver):
     def reset_encoder_counts(self):
         self.encoder_counts = 0
 
+    def measure_velocity(self, timer):
+        delta_c = self.encoder_counts - self.prev_counts
+        self.prev_counts = self.encoder_counts  # updated previous encoder counts will be used in next round
+        c_dot = delta_c * self.timer_freq  # delta_c / 0.01 seconds
+        orig_motor_rate = c_dot / self.encoder_cpr  # original motor shaft velocity, revs/s
+        orig_motor_ang_vel = orig_motor_rate * 2 * pi  # rads/s
+        self.wheel_ang_vel = orig_motor_ang_vel / self.gear_ratio
+        self.wheel_lin_vel = self.wheel_ang_vel * self.wheel_radius
+        
 
 # TEST
 if __name__ == "__main__":  # Test only the encoder part
@@ -69,20 +94,24 @@ if __name__ == "__main__":  # Test only the encoder part
     # Forwardly ramp up and down
     for i in range(100):
         emd.forward((i + 1) / 100)
-        print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+#         print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
         sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         emd.forward((i + 1) / 100)
-        print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+#         print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
         sleep(4 / 100)  # 4 seconds to ramp down
     # Backwardly ramp up and down
     for i in range(100):
         emd.backward((i + 1) / 100)
-        print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+#         print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
         sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         emd.backward((i + 1) / 100)
-        print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+#         print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
         sleep(4 / 100)  # 4 seconds to ramp down
 
     # Terminate
