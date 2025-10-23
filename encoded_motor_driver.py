@@ -53,10 +53,14 @@ if __name__ == "__main__":  # Test only the encoder part
     from time import sleep
 
     # SETUP
+    # emd = EncodedMotorDriver(
+    #     driver_ids=(9, 11, 10),
+    #     encoder_ids=(16, 17),
+    # )  # channel A motor, encoder's green and yellow on GP16 and GP17
     emd = EncodedMotorDriver(
-        driver_ids=(9, 10, 11),
-        encoder_ids=(16, 17),
-    )  # channel A motor, encoder's green and yellow on GP16 and GP17
+        driver_ids=(15, 13, 14),
+        encoder_ids=(18, 19),
+    )  # channel B motor, encoder's green and yellow on GP18 and GP19
     STBY = Pin(12, Pin.OUT)
     STBY.off()
 

@@ -1,10 +1,15 @@
 from motor_driver import MotorDriver
 from machine import Pin
 
+
 class DualMotorDriver:
     def __init__(self, right_ids: tuple, left_ids: tuple, stby_id: int) -> None:
-        self.right_motor = MotorDriver(*right_ids)  # unzip right_pins then feed to MotorDriver
-        self.left_motor = MotorDriver(*left_ids)  # unzip left_pins then feed to MotorDriver
+        self.right_motor = MotorDriver(
+            *right_ids
+        )  # unzip right_pins then feed to MotorDriver
+        self.left_motor = MotorDriver(
+            *left_ids
+        )  # unzip left_pins then feed to MotorDriver
         self.stby_pin = Pin(stby_id, Pin.OUT)
         self.enable()  # enable motor driver
 
@@ -18,33 +23,34 @@ class DualMotorDriver:
         self.right_motor.stop()
         self.left_motor.stop()
 
-    def linear_forward(self, speed=0.):
-        assert 0<=speed<=1
+    def linear_forward(self, speed=0.0):
+        assert 0 <= speed <= 1
         self.right_motor.forward(speed)
         self.left_motor.forward(speed)
 
-    def linear_backward(self, speed=0.):
-        assert 0<=speed<=1
+    def linear_backward(self, speed=0.0):
+        assert 0 <= speed <= 1
         self.right_motor.backward(speed)
         self.left_motor.backward(speed)
 
-    def spin_left(self, speed=0.):
-        assert 0<=speed<=1
+    def spin_left(self, speed=0.0):
+        assert 0 <= speed <= 1
         self.right_motor.forward(speed)
         self.left_motor.backward(speed)
 
-    def spin_right(self, speed=0.):
-        assert 0<=speed<=1
+    def spin_right(self, speed=0.0):
+        assert 0 <= speed <= 1
         self.right_motor.backward(speed)
         self.left_motor.forward(speed)
 
 
 # TEST
-if __name__=="__main__":
+if __name__ == "__main__":
     from time import sleep
+
     # SETUP
     dmd = DualMotorDriver(right_ids=(9, 11, 10), left_ids=(15, 13, 14), stby_id=12)
-    
+
     # LOOP
     # Forward ramp up and down
     for i in range(100):
