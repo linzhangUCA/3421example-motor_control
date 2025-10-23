@@ -1,13 +1,18 @@
 from motor_driver import MotorDriver
 from machine import Pin
 
+
 class EncodedMotorDriver(MotorDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(*driver_ids)
         self.enc_a_pin = Pin(encoder_ids[0], Pin.IN)
         self.enc_b_pin = Pin(encoder_ids[1], Pin.IN)
-        self.enc_a_pin.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self._update_counts_a)
-        self.enc_b_pin.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self._update_counts_b)
+        self.enc_a_pin.irq(
+            trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self._update_counts_a
+        )
+        self.enc_b_pin.irq(
+            trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self._update_counts_b
+        )
         # variables
         self._enc_a_val = self.enc_a_pin.value()
         self._enc_b_val = self.enc_b_pin.value()
@@ -42,12 +47,16 @@ class EncodedMotorDriver(MotorDriver):
     def reset_encoder_counts(self):
         self.encoder_counts = 0
 
+
 # TEST
 if __name__ == "__main__":  # Test only the encoder part
     from time import sleep
 
     # SETUP
-    emd = EncodedMotorDriver((9, 11, 10), (7, 8))  # channel A motor, encoders on pins 7 and 8
+    emd = EncodedMotorDriver(
+        driver_ids=(9, 10, 11),
+        encoder_ids=(16, 17),
+    )  # channel A motor, encoder's green and yellow on GP16 and GP17
     STBY = Pin(12, Pin.OUT)
     STBY.off()
 
