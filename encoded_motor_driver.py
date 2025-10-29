@@ -26,10 +26,10 @@ class EncodedMotorDriver(MotorDriver):
         self.wheel_radius = 0.025  # m
         self.gear_ratio = 98.5  #
         self.encoder_cpr = 28  # pulse counts per revolution
-        self.timer_freq = 100
+        self.vel_meas_freq = 100
         # Timer configuration
         self.vel_meas_timer = Timer(
-            freq=self.timer_freq,
+            freq=self.vel_meas_freq,
             mode=Timer.PERIODIC,
             callback=self.measure_velocity,
         )
@@ -65,13 +65,17 @@ class EncodedMotorDriver(MotorDriver):
 
     def measure_velocity(self, timer):
         delta_c = self.encoder_counts - self.prev_counts
-        self.prev_counts = self.encoder_counts  # updated previous encoder counts will be used in next round
-        c_dot = delta_c * self.timer_freq  # delta_c / 0.01 seconds
-        orig_motor_rate = c_dot / self.encoder_cpr  # original motor shaft velocity, revs/s
+        self.prev_counts = (
+            self.encoder_counts
+        )  # updated previous encoder counts will be used in next round
+        c_dot = delta_c * self.vel_meas_freq  # delta_c / 0.01 seconds
+        orig_motor_rate = (
+            c_dot / self.encoder_cpr
+        )  # original motor shaft velocity, revs/s
         orig_motor_ang_vel = orig_motor_rate * 2 * pi  # rads/s
         self.wheel_ang_vel = orig_motor_ang_vel / self.gear_ratio
         self.wheel_lin_vel = self.wheel_ang_vel * self.wheel_radius
-        
+
 
 # TEST
 if __name__ == "__main__":  # Test only the encoder part
@@ -94,24 +98,32 @@ if __name__ == "__main__":  # Test only the encoder part
     # Forwardly ramp up and down
     for i in range(100):
         emd.forward((i + 1) / 100)
-#         print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
-        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
+        #         print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(
+            f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}"
+        )
         sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         emd.forward((i + 1) / 100)
-#         print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
-        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
+        #         print(f"f, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(
+            f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}"
+        )
         sleep(4 / 100)  # 4 seconds to ramp down
     # Backwardly ramp up and down
     for i in range(100):
         emd.backward((i + 1) / 100)
-#         print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
-        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
+        #         print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(
+            f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}"
+        )
         sleep(4 / 100)  # 4 seconds to ramp up
     for i in reversed(range(100)):
         emd.backward((i + 1) / 100)
-#         print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
-        print(f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}")
+        #         print(f"b, dc: {i}%, enc_cnt: {emd.encoder_counts}")
+        print(
+            f"wheel's angular velocity={emd.wheel_ang_vel}, linear velocity={emd.wheel_lin_vel}"
+        )
         sleep(4 / 100)  # 4 seconds to ramp down
 
     # Terminate
