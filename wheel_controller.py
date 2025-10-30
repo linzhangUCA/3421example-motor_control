@@ -6,11 +6,12 @@ class WheelController(EncodedMotorDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(driver_ids, encoder_ids)
         # Constants
-        self.k_p = 1.5
-        self.k_i = 3.0
-        self.k_d = 0.005
-        self.vel_reg_freq = 50  # Hz
+        self.k_p = 1.2
+        self.k_i = 0.0
+        self.k_d = 1.5
+        self.reg_vel_freq = 50  # Hz
         # Variables
+        self.reg_vel_counter = 0
         self.duty = 0.0
         self.error = 0.0
         self.prev_error = 0.0
@@ -19,18 +20,20 @@ class WheelController(EncodedMotorDriver):
         self.ref_lin_vel = 0.0
         # PID controller config
         self.vel_reg_timer = Timer(
-            freq=self.vel_reg_freq,
+            freq=self.reg_vel_freq,
             mode=Timer.PERIODIC,
             callback=self.regulate_velocity,
         )
 
     def regulate_velocity(self, timer):
-        if self.ref_lin_vel == 0.0:
+        if self.ref_lin_vel == 0.0 or self.reg_vel_counter > self.reg_vel_freq:
             self.stop()
+            self.prev_error = 0.0
         else:
             self.error = self.ref_lin_vel - self.meas_lin_vel  # ang_vel also works
-            self.error_inte = self.error_inte + self.error / self.vel_reg_freq
-            self.error_diff = (self.error - self.prev_error) * self.vel_reg_freq
+            self.error_inte += self.error
+            self.error_diff = self.error - self.prev_error
+            self.prev_error = self.error  # UPDATE previous error
             inc_duty = (
                 self.k_p * self.error
                 + self.k_i * self.error_inte
@@ -45,9 +48,14 @@ class WheelController(EncodedMotorDriver):
                 if self.duty < -1.0:
                     self.duty = -1.0
                 self.backward(-self.duty)
+            self.reg_vel_counter += 1
 
     def set_wheel_velocity(self, ref_lin_vel):
-        self.ref_lin_vel = ref_lin_vel
+        if ref_lin_vel is not self.ref_lin_vel:
+            self.ref_lin_vel = ref_lin_vel
+            self.prev_error = 0.0
+            self.error_inte = 0.0
+            self.reg_vel_counter = 0
 
 
 if __name__ == "__main__":
@@ -61,14 +69,14 @@ if __name__ == "__main__":
     )
     STBY = Pin(12, Pin.OUT)
     STBY.on()
-    for i in range(300):
-        if i == 100:  # step up @ t=1 s
-            wc.set_wheel_velocity(0.5)
+    for i in range(200):
+        if i == 50:  # step up @ t=0.5 s
+            wc.set_wheel_velocity(0.4)
+        elif i == 140:  # step down @ t=1.25 s
+            wc.set_wheel_velocity(0.0)
         print(
             f"Reference velocity={wc.ref_lin_vel} m/s, Measured velocity={wc.meas_lin_vel} m/s"
         )
         sleep(0.01)
-
-    wc.set_wheel_velocity(0)
-    sleep(1)
+    # Terminate
     STBY.off()
