@@ -6,9 +6,9 @@ class WheelController(EncodedMotorDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(driver_ids, encoder_ids)
         # Constants
-        self.k_p = 2.0
-        self.k_i = 0.0
-        self.k_d = 0.0
+        self.k_p = 1.5
+        self.k_i = 3.0
+        self.k_d = 0.005
         self.vel_reg_freq = 50  # Hz
         # Variables
         self.duty = 0.0
@@ -61,9 +61,9 @@ if __name__ == "__main__":
     )
     STBY = Pin(12, Pin.OUT)
     STBY.on()
-    for i in range(500):
+    for i in range(300):
         if i == 100:  # step up @ t=1 s
-            wc.set_wheel_velocity(0.4)
+            wc.set_wheel_velocity(0.5)
         print(
             f"Reference velocity={wc.ref_lin_vel} m/s, Measured velocity={wc.meas_lin_vel} m/s"
         )
