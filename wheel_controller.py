@@ -6,11 +6,12 @@ class WheelController(EncodedMotorDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(driver_ids, encoder_ids)
         # Constants
-        self.k_p = 12.0
-        self.k_i = 10.0
-        self.k_d = 0.00001
+        self.k_p = 2.0
+        self.k_i = 0.0
+        self.k_d = 0.0
         self.vel_reg_freq = 50  # Hz
         # Variables
+        self.duty = 0.0
         self.error = 0.0
         self.prev_error = 0.0
         self.error_inte = 0.0  # integral
@@ -30,19 +31,20 @@ class WheelController(EncodedMotorDriver):
             self.error = self.ref_lin_vel - self.meas_lin_vel  # ang_vel also works
             self.error_inte = self.error_inte + self.error / self.vel_reg_freq
             self.error_diff = (self.error - self.prev_error) * self.vel_reg_freq
-            duty = (
+            inc_duty = (
                 self.k_p * self.error
                 + self.k_i * self.error_inte
                 + self.k_d * self.error_diff
             )
-            if duty > 0:
-                if duty > 1:
-                    duty = 1
-                self.forward(duty)
+            self.duty = self.duty + inc_duty
+            if self.duty > 0:
+                if self.duty > 1.0:
+                    self.duty = 1.0
+                self.forward(self.duty)
             else:
-                if duty < -1:
-                    duty = -1
-                self.backward(-duty)
+                if self.duty < -1.0:
+                    self.duty = -1.0
+                self.backward(-self.duty)
 
     def set_wheel_velocity(self, ref_lin_vel):
         self.ref_lin_vel = ref_lin_vel
@@ -61,9 +63,9 @@ if __name__ == "__main__":
     STBY.on()
     for i in range(500):
         if i == 100:  # step up @ t=1 s
-            wc.set_wheel_velocity(0.1)
+            wc.set_wheel_velocity(0.4)
         print(
-            f"Reference velocity: {wc.ref_lin_vel} m/s, Measured velocity: {wc.meas_lin_vel} m/s"
+            f"Reference velocity={wc.ref_lin_vel} m/s, Measured velocity={wc.meas_lin_vel} m/s"
         )
         sleep(0.01)
 
