@@ -29,8 +29,8 @@ if __name__ == "__main__":
     from utime import sleep
 
     # SETUP
-    # md = MotorDriver(pwm_id=15, in1_id=13, in2_id=14)  # right motor
-    md = MotorDriver(pwm_id=16, in1_id=18, in2_id=17)  # left motor
+    md = MotorDriver(pwm_id=15, in1_id=13, in2_id=14)  # right motor
+    # md = MotorDriver(pwm_id=16, in1_id=18, in2_id=17)  # left motor
     STBY = Pin(12, Pin.OUT)
     STBY.off()
 
@@ -58,6 +58,6 @@ if __name__ == "__main__":
     # Terminate
     md.stop()
     print("motor stopped.")
-    sleep(0.1)  # full stop
+    sleep(0.5)  # full stop
     STBY.off()  # disable motor driver
     print("motor driver disabled.")
