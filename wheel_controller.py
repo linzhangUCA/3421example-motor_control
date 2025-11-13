@@ -6,6 +6,7 @@ class WheelController(EncodedMotorDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(driver_ids, encoder_ids)
         # Constants
+        self.meas_radius = 0.025  # m
         self.k_p = 1.2
         self.k_i = 0.0
         self.k_d = 1.5
