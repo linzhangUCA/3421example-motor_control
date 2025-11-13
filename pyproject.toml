@@ -1,9 +1,7 @@
 [project]
-name = "3421example-motor-control"
+name = "motcon"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "rshell>=0.0.36",
-]
+dependencies = ["rshell>=0.0.36"]
