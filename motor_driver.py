@@ -26,11 +26,11 @@ class MotorDriver:
 
 # TEST
 if __name__ == "__main__":
-    from time import sleep
+    from utime import sleep
 
     # SETUP
-    # md = MotorDriver(pwm_id=9, in1_id=11, in2_id=10)  # right motor
-    md = MotorDriver(pwm_id=15, in1_id=13, in2_id=14)  # left motor
+    # md = MotorDriver(pwm_id=15, in1_id=13, in2_id=14)  # right motor
+    md = MotorDriver(pwm_id=16, in1_id=18, in2_id=17)  # left motor
     STBY = Pin(12, Pin.OUT)
     STBY.off()
 
