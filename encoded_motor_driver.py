@@ -57,14 +57,14 @@ if __name__ == "__main__":  # Test only the encoder part
     from utime import sleep
 
     # SETUP
-    emd = EncodedMotorDriver(
-        driver_ids=(16, 18, 17),
-        encoder_ids=(19, 20),
-    )  # right motor, encoder's green and yellow on GP19 and GP20
     # emd = EncodedMotorDriver(
-    #     driver_ids=(15, 13, 14),
-    #     encoder_ids=(11, 10),
-    # )  # left motor, encoder's green and yellow on GP10 and GP11
+    #     driver_ids=(9, 11, 10),
+    #     encoder_ids=(16, 17),
+    # )  # right motor, encoder's green and yellow on GP19 and GP20
+    emd = EncodedMotorDriver(
+        driver_ids=(15, 13, 14),
+        encoder_ids=(18, 19),
+    )  # left motor, encoder's green and yellow on GP18 and GP19
     STBY = Pin(12, Pin.OUT)
     STBY.off()
 
