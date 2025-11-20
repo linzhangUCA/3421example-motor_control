@@ -3,7 +3,7 @@ from machine import Pin
 from time import sleep  
 
 # SETUP
-emd = EncodedMotorDriver((9, 11, 10), (7, 8))  # left motor, encoders on pins 7 and 8
+emd = EncodedMotorDriver((9, 11, 10), (16, 17))  # left motor, encoders on pins 7 and 8
 STBY = Pin(12, Pin.OUT)
 STBY.off()
 # Constants

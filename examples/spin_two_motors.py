@@ -27,20 +27,20 @@ for i in reversed(range(100)):
     sleep(5 / 100)  #  5 seconds to ramp down
 # Left ramp up and down
 for i in range(100):
-    dmd.angular_left((i + 1) / 100)
+    dmd.spin_left((i + 1) / 100)
     print(f"l, dc: {i}%")
     sleep(4 / 100)  #  4 seconds to ramp up
 for i in reversed(range(100)):
-    dmd.angular_left((i + 1) / 100)
+    dmd.spin_left((i + 1) / 100)
     print(f"l, dc: {i}%")
     sleep(3 / 100)  #  3 seconds to ramp down
 # Right ramp up and down
 for i in range(100):
-    dmd.angular_right((i + 1) / 100)
+    dmd.spin_right((i + 1) / 100)
     print(f"r, dc: {i}%")
     sleep(2 / 100)  #  2 seconds to ramp up
 for i in reversed(range(100)):
-    dmd.angular_right((i + 1) / 100)
+    dmd.spin_right((i + 1) / 100)
     print(f"r, dc: {i}%")
     sleep(1 / 100)  #  1 second to ramp down
 
