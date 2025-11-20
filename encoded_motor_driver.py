@@ -15,35 +15,35 @@ class EncodedMotorDriver(MotorDriver):
             trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.update_counts_b
         )
         # Variables
-        self._enc_a_val = self.enc_a_pin.value()
-        self._enc_b_val = self.enc_b_pin.value()
+        self.enc_a_val = self.enc_a_pin.value()
+        self.enc_b_val = self.enc_b_pin.value()
         self.encoder_counts = 0
         self.prev_counts = 0
         self.meas_ang_vel = 0.0
         self.meas_lin_vel = 0.0
 
     def update_counts_a(self, pin):
-        self._enc_a_val = pin.value()
-        if self._enc_a_val == 1:
-            if self._enc_b_val == 0:  # a=1, b=0
+        self.enc_a_val = pin.value()
+        if self.enc_a_val == 1:
+            if self.enc_b_val == 0:  # a=1, b=0
                 self.encoder_counts += 1
             else:  # a=1, b=1
                 self.encoder_counts -= 1
         else:
-            if self._enc_b_val == 0:  # a=0, b=0
+            if self.enc_b_val == 0:  # a=0, b=0
                 self.encoder_counts -= 1
             else:  # a=0, b=1
                 self.encoder_counts += 1
 
     def update_counts_b(self, pin):
-        self._enc_b_val = pin.value()
-        if self._enc_b_val == 1:
-            if self._enc_a_val == 0:  # b=1, a=0
+        self.enc_b_val = pin.value()
+        if self.enc_b_val == 1:
+            if self.enc_a_val == 0:  # b=1, a=0
                 self.encoder_counts -= 1
             else:  # b=1, a=1
                 self.encoder_counts += 1
         else:
-            if self._enc_a_val == 0:  # b=0, a=0
+            if self.enc_a_val == 0:  # b=0, a=0
                 self.encoder_counts += 1
             else:  # b=0, a=1
                 self.encoder_counts -= 1
