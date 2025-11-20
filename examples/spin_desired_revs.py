@@ -1,3 +1,6 @@
+# Make sure you've uploaded `encoded_motor_driver.py` to the Pico board
+
+
 from encoded_motor_driver import EncodedMotorDriver
 from machine import Pin
 from time import sleep  
