@@ -1,12 +1,11 @@
-from encoded_motor_driver import EncodedMotorDriver
+from sentient_wheel_driver import SentientWheelDriver
 from machine import Timer
 
 
-class WheelController(EncodedMotorDriver):
+class WheelController(SentientWheelDriver):
     def __init__(self, driver_ids, encoder_ids) -> None:
         super().__init__(driver_ids, encoder_ids)
         # Constants
-        self.meas_radius = 0.025  # m
         self.k_p = 1.2
         self.k_i = 0.0
         self.k_d = 1.5
@@ -65,14 +64,18 @@ if __name__ == "__main__":
     from machine import Pin
 
     wc = WheelController(
-        driver_ids=(15, 13, 14),
-        encoder_ids=(18, 19),
+        driver_ids=(9, 11, 10),
+        encoder_ids=(16, 17),
     )
+    # wc = WheelController(
+    #     driver_ids=(15, 13, 14),
+    #     encoder_ids=(18, 19),
+    # )
     STBY = Pin(12, Pin.OUT)
     STBY.on()
     for i in range(200):
         if i == 50:  # step up @ t=0.5 s
-            wc.set_wheel_velocity(0.4)
+            wc.set_wheel_velocity(-0.1)
         elif i == 140:  # step down @ t=1.25 s
             wc.set_wheel_velocity(0.0)
         print(
